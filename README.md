@@ -1,3 +1,5 @@
+# This is Selfnet project, create from abp template.
+
 # ASP.NET Core & EntityFramework Core Based Startup Template
 
 This template is a simple startup project to start with ABP
