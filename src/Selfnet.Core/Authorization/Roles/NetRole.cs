@@ -5,10 +5,12 @@ using Selfnet.Authorization.Users;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Selfnet.Authorization.Roles
 {
+    [Table("Roles")]
     public class NetRole : FullAuditedEntity<int>, IMayHaveTenant, IRole<int>, IFullAudited<NetUser>
         //where TUser : AbpUser<TUser>
     {

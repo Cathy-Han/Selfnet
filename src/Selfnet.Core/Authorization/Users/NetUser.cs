@@ -10,6 +10,7 @@ using System.Text;
 
 namespace Selfnet.Authorization.Users
 {
+    [Table("Users")]
     public class NetUser : FullAuditedEntity<long>, IMayHaveTenant, IPassivable, IUser<long>, IFullAudited<NetUser>
     {
         /// <summary>
