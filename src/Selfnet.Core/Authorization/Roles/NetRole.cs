@@ -2,6 +2,7 @@
 using Abp.Domain.Entities.Auditing;
 using Microsoft.AspNet.Identity;
 using Selfnet.Authorization.Users;
+using Selfnet.Common.Authorization.Roles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,81 +11,37 @@ using System.Text;
 
 namespace Selfnet.Authorization.Roles
 {
-    [Table("Roles")]
-    public class NetRole : FullAuditedEntity<int>, IMayHaveTenant, IRole<int>, IFullAudited<NetUser>
-        //where TUser : AbpUser<TUser>
+    public abstract class NetRole<TUser> : RoleBase, IRole<int>, IFullAudited<TUser> where TUser : NetUser<TUser>
     {
-        /// <summary>
-        /// Maximum length of the <see cref="DisplayName"/> property.
-        /// </summary>
-        public const int MaxDisplayNameLength = 64;
+        public virtual TUser DeleterUser { get; set; }
 
-        /// <summary>
-        /// Maximum length of the <see cref="Name"/> property.
-        /// </summary>
-        public const int MaxNameLength = 32;
+        public virtual TUser CreatorUser { get; set; }
 
-        /// <summary>
-        /// Tenant's Id, if this role is a tenant-level role. Null, if not.
-        /// </summary>
-        public virtual int? TenantId { get; set; }
-
-        /// <summary>
-        /// Unique name of this role.
-        /// </summary>
-        [Required]
-        [StringLength(MaxNameLength)]
-        public virtual string Name { get; set; }
-
-        /// <summary>
-        /// Display name of this role.
-        /// </summary>
-        [Required]
-        [StringLength(MaxDisplayNameLength)]
-        public virtual string DisplayName { get; set; }
-
-        /// <summary>
-        /// Is this a static role?
-        /// Static roles can not be deleted, can not change their name.
-        /// They can be used programmatically.
-        /// </summary>
-        public virtual bool IsStatic { get; set; }
-
-        /// <summary>
-        /// Is this role will be assigned to new users as default?
-        /// </summary>
-        public virtual bool IsDefault { get; set; }
-
-        ///// <summary>
-        ///// List of permissions of the role.
-        ///// </summary>
-        //[ForeignKey("RoleId")]
-        //public virtual ICollection<RolePermissionSetting> Permissions { get; set; }
+        public virtual TUser LastModifierUser { get; set; }
 
         protected NetRole()
         {
-            Name = Guid.NewGuid().ToString("N");
         }
 
+        /// <summary>
+        /// Creates a new <see cref="AbpRole{TUser}"/> object.
+        /// </summary>
+        /// <param name="tenantId">TenantId or null (if this is not a tenant-level role)</param>
+        /// <param name="displayName">Display name of the role</param>
         protected NetRole(int? tenantId, string displayName)
-            : this()
+            : base(tenantId, displayName)
         {
-            TenantId = tenantId;
-            DisplayName = displayName;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="AbpRole{TUser}"/> object.
+        /// </summary>
+        /// <param name="tenantId">TenantId or null (if this is not a tenant-level role)</param>
+        /// <param name="name">Unique role name</param>
+        /// <param name="displayName">Display name of the role</param>
         protected NetRole(int? tenantId, string name, string displayName)
-            : this(tenantId, displayName)
+            : base(tenantId, name, displayName)
         {
-            Name = name;
         }
-
-        public override string ToString()
-        {
-            return $"[Role {Id}, Name={Name}]";
-        }
-        public NetUser CreatorUser { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public NetUser LastModifierUser { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public NetUser DeleterUser { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

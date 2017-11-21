@@ -28,32 +28,5 @@ namespace Selfnet.EntityFrameworkCore
             //base.OnModelCreating(modelBuilder);
         }
 
-        /// <summary>
-        /// 实体创建处理函数
-        /// </summary>
-        /// <param name="modelBuilder"></param>
-        protected virtual void RegisterModel(ModelBuilder modelBuilder)
-        {
-            //IEnumerable<Type> typesToRegister = this.GetTypesToRegister();
-            //foreach (var type in typesToRegister)
-            //{
-            //    dynamic configurationInstance = Activator.CreateInstance(type);
-            //    modelBuilder.Configurations.Add(configurationInstance);
-            //}
-        }
-        /// <summary>
-        /// 获取当前database下实体mapping,注册模型
-        /// </summary>
-        /// <returns></returns>
-        protected virtual IEnumerable<Type> GetTypesToRegister(string mappingAssembly)
-        {
-            var assembly = Assembly.Load(mappingAssembly);
-            var typesToRegister = from t in assembly.GetTypes()
-                                  where !t.IsAbstract
-                                  && !t.IsInterface
-                                  && t.IsClass
-                                  select t;
-            return typesToRegister.ToList();
-        }
     }
 }
